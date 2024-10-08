@@ -12,31 +12,31 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Inject
-    private EmployeeRepositoryImpl employeeRepository;
+    private EmployeeRepositoryImpl repository;
 
 
     @Override
     public boolean create ( Employee employee ) {
-        return employeeRepository.create(employee);
+        return repository.create(employee);
     }
 
     @Override
     public boolean update ( Employee employee ) {
-        return false;
+        return repository.update(employee);
     }
 
     @Override
     public boolean delete ( Employee employee ) {
-        return false;
+        return repository.delete(employee);
     }
 
     @Override
     public Employee findById ( int id ) {
-        return null;
+        return repository.findById(id);
     }
 
     @Override
     public List<Employee> findAll () {
-        return List.of();
+        return repository.findAll();
     }
 }

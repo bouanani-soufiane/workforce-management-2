@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class EntityManagerProvider {
 
     private static EntityManagerProvider INSTANCE;
-    private EntityManagerFactory managerFactory;
+    private final EntityManagerFactory managerFactory;
 
     private EntityManagerProvider () {
 
