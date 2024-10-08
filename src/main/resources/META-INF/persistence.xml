@@ -4,8 +4,6 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
     <persistence-unit name="default">
-        <properties>
-            <property name="" value=""/>
-        </properties>
+
     </persistence-unit>
 </persistence>

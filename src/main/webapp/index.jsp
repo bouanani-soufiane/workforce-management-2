@@ -9,11 +9,7 @@
 
 </head>
 <body>
-<h1><%= "Hello World!" %> <c:out value="cout value" />
-</h1>
-<br/>
-<a href="hello-servlet">Hello Servlet</a>
-
+<h1>Hello ${name}</h1>
 
 </body>
 </html>
