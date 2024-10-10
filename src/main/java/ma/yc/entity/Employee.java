@@ -125,5 +125,22 @@ public class Employee extends Person {
         this.jobOffers = jobOffers;
         return this;
     }
+
+    @Override
+    public String toString () {
+        final StringBuilder sb = new StringBuilder("Employee{");
+        sb.append("departement='").append(departement).append('\'');
+        sb.append(", jobTitle='").append(jobTitle).append('\'');
+        sb.append(", name='").append(name()).append('\'');
+        sb.append(", email='").append(email()).append('\'');
+        sb.append(", address='").append(address()).append('\'');
+        sb.append(", role='").append(role()).append('\'');
+        sb.append(", birthDate=").append(birthDate);
+        sb.append(", securityNumber=").append(securityNumber);
+        sb.append(", hireDate=").append(hireDate);
+        sb.append(", soldVacation=").append(soldVacation);
+        sb.append('}');
+        return sb.toString();
+    }
 }
 

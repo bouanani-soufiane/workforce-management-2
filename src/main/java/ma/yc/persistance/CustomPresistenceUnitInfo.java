@@ -88,7 +88,7 @@ public class CustomPresistenceUnitInfo implements PersistenceUnitInfo {
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.format_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.connection.driver_class", DotenvReader.get("DB_DRIVER"));
         properties.setProperty("hibernate.connection.url", DotenvReader.get("DB_URL"));
         properties.setProperty("hibernate.connection.username", DotenvReader.get("DB_USERNAME"));
