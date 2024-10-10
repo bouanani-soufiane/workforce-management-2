@@ -30,12 +30,6 @@ public class CustomPresistenceUnitInfo implements PersistenceUnitInfo {
 
     @Override
     public DataSource getJtaDataSource () {
-//        HikariDataSource ds = new HikariDataSource();
-//        ds.setJdbcUrl(DotenvReader.get("DB_URL"));
-//        ds.setUsername(DotenvReader.get("DB_USERNAME"));
-//        ds.setPassword(DotenvReader.get("DB_PASSWORD"));
-//        ds.setDriverClassName(DotenvReader.get("DB_DRIVER"));
-//        return ds;
         return null;
     }
 
@@ -61,8 +55,16 @@ public class CustomPresistenceUnitInfo implements PersistenceUnitInfo {
 
     @Override
     public List<String> getManagedClassNames () {
-        return List.of("ma.yc.entity.Employee");
-
+        return List.of(
+                "ma.yc.entity.Admin",
+                "ma.yc.entity.Candidature",
+                "ma.yc.entity.Employee",
+                "ma.yc.entity.FamillyAllowance",
+                "ma.yc.entity.HistoryUpdate",
+                "ma.yc.entity.JobOffer",
+                "ma.yc.entity.Person",
+                "ma.yc.entity.Vacation"
+        );
     }
 
     @Override
@@ -85,7 +87,8 @@ public class CustomPresistenceUnitInfo implements PersistenceUnitInfo {
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.format_sql", "true");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.connection.driver_class", DotenvReader.get("DB_DRIVER"));
         properties.setProperty("hibernate.connection.url", DotenvReader.get("DB_URL"));
         properties.setProperty("hibernate.connection.username", DotenvReader.get("DB_USERNAME"));
