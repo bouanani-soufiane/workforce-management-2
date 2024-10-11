@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 
-@WebServlet(name = "em", value = {"/", "/employee/create", "/employee/edit", "/employee/store", "/employee/update/", "/employee/delete", "/employee/search", "/employee/filter"})
+@WebServlet(name = "em", value = {"/", "/employee/create", "/employee/edit", "/employee/store", "/employee/update", "/employee/delete", "/employee/search", "/employee/filter"})
+
 public class EmployeeServlet extends HttpServlet {
 
     private static final String ACTION_HOME = "/";
@@ -79,6 +80,7 @@ public class EmployeeServlet extends HttpServlet {
                 break;
             case ACTION_UPDATE:
                 updateEmployee(req, res);
+                break;
             case ACTION_SEARCH:
                 searchEmployee(req, res);
                 break;
@@ -170,14 +172,32 @@ public class EmployeeServlet extends HttpServlet {
 
 
 
-
-    private void updateEmployee ( HttpServletRequest req, HttpServletResponse res ) {
+    private void updateEmployee(HttpServletRequest req, HttpServletResponse res) {
         try {
-            Employee employee = new Employee();
+            Long id = Long.parseLong(req.getParameter("id"));
+            Employee employee = service.findById(id);
+            if (employee == null) {
+                writeResponse(res, HttpServletResponse.SC_NOT_FOUND, "Employee not found");
+                return;
+            }
+
             employee.setName(req.getParameter("name"));
             employee.setEmail(req.getParameter("email"));
             employee.setPhone(req.getParameter("phone"));
             employee.setDepartement(req.getParameter("department"));
+            employee.setPassword("1234");
+            employee.setAddress(req.getParameter("address"));
+            employee.setJobTitle(req.getParameter("jobTitle"));
+            employee.setBirthDate(LocalDate.parse(req.getParameter("birthDate")));
+
+            SocialSecurityNumber ssn = new SocialSecurityNumber(req.getParameter("securityNumber"));
+            employee.setSecurityNumber(ssn);
+
+            FamillyAllowance allowance = new FamillyAllowance();
+            allowance.setSalary(Double.parseDouble(req.getParameter("salary")));
+            allowance.setChildrenCount(Integer.parseInt(req.getParameter("childrenCount")));
+            employee.setFamillyAllowance(allowance);
+
             service.update(employee);
             writeResponse(res, HttpServletResponse.SC_OK, "Employee updated successfully");
         } catch (Exception e) {
@@ -193,7 +213,9 @@ public class EmployeeServlet extends HttpServlet {
     }
 
     private void editEmployee ( HttpServletRequest req, HttpServletResponse res ) throws ServletException, IOException {
-        final Long id = Long.getLong(req.getParameter("id"));
+        String idParam = req.getParameter("id");
+        Long id = Long.parseLong(idParam);
+
         req.setAttribute("employee", service.findById(id));
         req.getRequestDispatcher("/employee/edit.jsp").forward(req, res);
     }
