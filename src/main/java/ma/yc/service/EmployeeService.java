@@ -1,4 +1,4 @@
-package ma.yc.service.interfaces;
+package ma.yc.service;
 
 import ma.yc.entity.Employee;
 

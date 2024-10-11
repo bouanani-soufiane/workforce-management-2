@@ -1,6 +1,4 @@
-package ma.yc.repository.interfaces;
-
-import ma.yc.entity.Employee;
+package ma.yc.util.genericRepository;
 
 import java.util.List;
 

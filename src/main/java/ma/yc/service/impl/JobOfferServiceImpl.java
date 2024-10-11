@@ -2,44 +2,44 @@ package ma.yc.service.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import ma.yc.entity.Employee;
-import ma.yc.repository.EmployeeRepository;
-import ma.yc.service.EmployeeService;
+import ma.yc.entity.JobOffer;
+import ma.yc.repository.JobOfferRepository;
+import ma.yc.service.JobOfferService;
 
 import java.util.List;
 
 @ApplicationScoped
-public class EmployeeServiceImpl implements EmployeeService {
+public class JobOfferServiceImpl implements JobOfferService {
 
-    private final EmployeeRepository repository;
+    private final JobOfferRepository repository;
 
     @Inject
-    public EmployeeServiceImpl ( EmployeeRepository repository ) {
+    public JobOfferServiceImpl ( JobOfferRepository repository ) {
         this.repository = repository;
     }
 
     @Override
-    public boolean create ( Employee employee ) {
+    public boolean create ( JobOffer employee ) {
         return repository.create(employee);
     }
 
     @Override
-    public boolean update ( Employee employee ) {
+    public boolean update ( JobOffer employee ) {
         return repository.update(employee);
     }
 
     @Override
-    public boolean delete ( Employee employee ) {
+    public boolean delete ( JobOffer employee ) {
         return repository.delete(employee);
     }
 
     @Override
-    public Employee findById ( int id ) {
+    public JobOffer findById ( int id ) {
         return repository.findById(id);
     }
 
     @Override
-    public List<Employee> findAll () {
+    public List<JobOffer> findAll () {
         return repository.findAll();
     }
 }

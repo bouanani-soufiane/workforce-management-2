@@ -1,8 +1,7 @@
 package ma.yc;
 
-import ma.yc.entity.Employee;
-import ma.yc.entity.valueObject.SocialSecurityNumber;
-import ma.yc.service.interfaces.EmployeeService;
+import ma.yc.entity.JobOffer;
+import ma.yc.service.JobOfferService;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 
@@ -17,25 +16,19 @@ public class Main {
 
         Weld weld = new Weld();
         try (WeldContainer container = weld.initialize()) {
-            EmployeeService employeeService = container.select(EmployeeService.class).get();
+            JobOfferService jobOfferService = container.select(JobOfferService.class).get();
 
-            Employee employee = new Employee();
-            employee.setName("aaaaaaaaaaaaaaaaaaaaaaa");
-            employee.setEmail("aaaaaaaaaaaaaaa@gmail.com");
-            employee.setPassword("&é&é&é");
-            employee.setBirthDate(LocalDateTime.of(2022, 2, 2, 1, 2));
-            employee.setDepartement("IT");
-            employee.setAddress("addess");
-            employee.setJobTitle("Software Developer");
-            employee.setHireDate(LocalDateTime.now());
-            employee.setSoldVacation(10);
+            JobOffer jobOffer = new JobOffer();
+            jobOffer.setTitle("q");
+            jobOffer.setDescription("q");
+            jobOffer.setActive(true);
+            jobOffer.setDateEnd(LocalDateTime.now());
+            jobOffer.setDatePublish(LocalDateTime.now());
+            jobOffer.setRequiredSkills("fghj,qdqs,qdss");
 
-            SocialSecurityNumber ssn = new SocialSecurityNumber("123-45-6789");
-            employee.setSecurityNumber(ssn);
+            jobOfferService.create(jobOffer);
 
-            employeeService.create(employee);
-
-            System.out.println("here : "+employeeService.delete(employeeService.findById(402)));
+            System.out.println("here : " + jobOfferService.delete(jobOfferService.findById(402)));
 
 
         }

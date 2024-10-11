@@ -1,7 +1,6 @@
-package ma.yc.repository.impl;
+package ma.yc.util.genericRepository;
 
 import jakarta.persistence.EntityManager;
-import ma.yc.repository.interfaces.DefaultRepository;
 import ma.yc.util.EntityManagerProvider;
 
 import java.util.List;
