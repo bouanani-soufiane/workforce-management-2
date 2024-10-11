@@ -21,7 +21,7 @@ public class HistoryUpdate {
     private Employee employee;
 
 
-    public Long id () {
+    public Long getId () {
         return id;
     }
 
@@ -30,7 +30,7 @@ public class HistoryUpdate {
         return this;
     }
 
-    public LocalDateTime updatedAt () {
+    public LocalDateTime getUpdatedAt () {
         return updatedAt;
     }
 
@@ -39,7 +39,7 @@ public class HistoryUpdate {
         return this;
     }
 
-    public String updatedColumn () {
+    public String getUpdatedColumn () {
         return updatedColumn;
     }
 
@@ -48,7 +48,7 @@ public class HistoryUpdate {
         return this;
     }
 
-    public String oldValue () {
+    public String getOldValue () {
         return oldValue;
     }
 
@@ -57,7 +57,7 @@ public class HistoryUpdate {
         return this;
     }
 
-    public String newValue () {
+    public String getNewValue () {
         return newValue;
     }
 
@@ -66,7 +66,7 @@ public class HistoryUpdate {
         return this;
     }
 
-    public Employee employee () {
+    public Employee getEmployee () {
         return employee;
     }
 

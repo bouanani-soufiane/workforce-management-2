@@ -34,7 +34,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer findById ( int id ) {
+    public JobOffer findById ( Long id ) {
         return repository.findById(id);
     }
 

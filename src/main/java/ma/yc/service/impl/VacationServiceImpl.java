@@ -32,7 +32,7 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
-    public Vacation findById ( int id ) {
+    public Vacation findById ( Long id ) {
         return repository.findById(id);
     }
 

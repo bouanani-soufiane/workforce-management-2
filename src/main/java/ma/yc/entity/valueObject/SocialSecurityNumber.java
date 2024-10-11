@@ -17,4 +17,8 @@ public record SocialSecurityNumber(
             throw new IllegalArgumentException("Invalid Social Security Number");
         }
     }
+    @Override
+    public String toString() {
+        return ssn;
+    }
 }

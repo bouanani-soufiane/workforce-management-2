@@ -16,7 +16,7 @@ public class Person {
     private String address;
     private boolean role ;
 
-    public Long id () {
+    public Long getId () {
         return id;
     }
 
@@ -25,7 +25,7 @@ public class Person {
         return this;
     }
 
-    public String name () {
+    public String getName () {
         return name;
     }
 
@@ -34,7 +34,7 @@ public class Person {
         return this;
     }
 
-    public String email () {
+    public String getEmail () {
         return email;
     }
 
@@ -43,7 +43,7 @@ public class Person {
         return this;
     }
 
-    public String password () {
+    public String getPassword () {
         return password;
     }
 
@@ -52,7 +52,7 @@ public class Person {
         return this;
     }
 
-    public String address () {
+    public String getAddress () {
         return address;
     }
 
@@ -61,26 +61,12 @@ public class Person {
         return this;
     }
 
-    public boolean role () {
+    public boolean isRole () {
         return role;
     }
 
     public Person setRole ( boolean role ) {
         this.role = role;
         return this;
-    }
-
-
-    @Override
-    public String toString () {
-        final StringBuilder sb = new StringBuilder("Person{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append(", address='").append(address).append('\'');
-        sb.append(", role=").append(role);
-        sb.append('}');
-        return sb.toString();
     }
 }

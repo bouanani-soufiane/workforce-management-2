@@ -22,7 +22,7 @@ public class Candidature {
     @JoinColumn(name = "jobOffer_id")
     private JobOffer jobOffer;
 
-    public Long id () {
+    public Long getId () {
         return id;
     }
 
@@ -31,7 +31,7 @@ public class Candidature {
         return this;
     }
 
-    public String name () {
+    public String getName () {
         return name;
     }
 
@@ -40,7 +40,7 @@ public class Candidature {
         return this;
     }
 
-    public String email () {
+    public String getEmail () {
         return email;
     }
 
@@ -49,7 +49,7 @@ public class Candidature {
         return this;
     }
 
-    public String skills () {
+    public String getSkills () {
         return skills;
     }
 
@@ -58,7 +58,7 @@ public class Candidature {
         return this;
     }
 
-    public ApplicationStatus applicationStatus () {
+    public ApplicationStatus getApplicationStatus () {
         return applicationStatus;
     }
 
@@ -67,7 +67,7 @@ public class Candidature {
         return this;
     }
 
-    public LocalDateTime submissionDate () {
+    public LocalDateTime getSubmissionDate () {
         return submissionDate;
     }
 
@@ -76,7 +76,7 @@ public class Candidature {
         return this;
     }
 
-    public JobOffer jobOffer () {
+    public JobOffer getJobOffer () {
         return jobOffer;
     }
 

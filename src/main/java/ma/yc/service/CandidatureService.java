@@ -13,7 +13,7 @@ public interface CandidatureService {
 
     boolean delete ( Candidature employee );
 
-    Candidature findById ( int id );
+    Candidature findById ( Long id );
 
     List<Candidature> findAll ();
 }

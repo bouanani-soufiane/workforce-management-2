@@ -32,7 +32,7 @@ public class CandidatureServiceImpl implements CandidatureService {
     }
 
     @Override
-    public Candidature findById ( int id ) {
+    public Candidature findById ( Long id ) {
         return repository.findById(id);
     }
 

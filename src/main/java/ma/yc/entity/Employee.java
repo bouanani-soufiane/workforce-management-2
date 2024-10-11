@@ -3,6 +3,7 @@ package ma.yc.entity;
 import jakarta.persistence.*;
 import ma.yc.entity.valueObject.SocialSecurityNumber;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +12,14 @@ import java.util.List;
 @Table(name = "employees")
 public class Employee extends Person {
 
+    private String phone;
     private String departement;
     private String jobTitle;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     @Embedded
     private SocialSecurityNumber securityNumber;
 
-    private LocalDateTime hireDate;
+    private LocalDate hireDate;
     private Integer soldVacation;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -35,8 +37,16 @@ public class Employee extends Person {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<JobOffer> jobOffers = new ArrayList<>();
 
+    public String getPhone () {
+        return phone;
+    }
 
-    public String departement () {
+    public Employee setPhone ( String phone ) {
+        this.phone = phone;
+        return this;
+    }
+
+    public String getDepartement () {
         return departement;
     }
 
@@ -45,7 +55,7 @@ public class Employee extends Person {
         return this;
     }
 
-    public String jobTitle () {
+    public String getJobTitle () {
         return jobTitle;
     }
 
@@ -54,16 +64,16 @@ public class Employee extends Person {
         return this;
     }
 
-    public LocalDateTime birthDate () {
+    public LocalDate getBirthDate () {
         return birthDate;
     }
 
-    public Employee setBirthDate ( LocalDateTime birthDate ) {
+    public Employee setBirthDate ( LocalDate birthDate ) {
         this.birthDate = birthDate;
         return this;
     }
 
-    public SocialSecurityNumber securityNumber () {
+    public SocialSecurityNumber getSecurityNumber () {
         return securityNumber;
     }
 
@@ -72,16 +82,16 @@ public class Employee extends Person {
         return this;
     }
 
-    public LocalDateTime hireDate () {
+    public LocalDate getHireDate () {
         return hireDate;
     }
 
-    public Employee setHireDate ( LocalDateTime hireDate ) {
+    public Employee setHireDate ( LocalDate hireDate ) {
         this.hireDate = hireDate;
         return this;
     }
 
-    public Integer soldVacation () {
+    public Integer getSoldVacation () {
         return soldVacation;
     }
 
@@ -90,7 +100,7 @@ public class Employee extends Person {
         return this;
     }
 
-    public FamillyAllowance famillyAllowance () {
+    public FamillyAllowance getFamillyAllowance () {
         return famillyAllowance;
     }
 
@@ -99,7 +109,7 @@ public class Employee extends Person {
         return this;
     }
 
-    public List<Vacation> vacations () {
+    public List<Vacation> getVacations () {
         return vacations;
     }
 
@@ -108,7 +118,7 @@ public class Employee extends Person {
         return this;
     }
 
-    public List<HistoryUpdate> historyUpdates () {
+    public List<HistoryUpdate> getHistoryUpdates () {
         return historyUpdates;
     }
 
@@ -117,30 +127,13 @@ public class Employee extends Person {
         return this;
     }
 
-    public List<JobOffer> jobOffers () {
+    public List<JobOffer> getJobOffers () {
         return jobOffers;
     }
 
     public Employee setJobOffers ( List<JobOffer> jobOffers ) {
         this.jobOffers = jobOffers;
         return this;
-    }
-
-    @Override
-    public String toString () {
-        final StringBuilder sb = new StringBuilder("Employee{");
-        sb.append("departement='").append(departement).append('\'');
-        sb.append(", jobTitle='").append(jobTitle).append('\'');
-        sb.append(", name='").append(name()).append('\'');
-        sb.append(", email='").append(email()).append('\'');
-        sb.append(", address='").append(address()).append('\'');
-        sb.append(", role='").append(role()).append('\'');
-        sb.append(", birthDate=").append(birthDate);
-        sb.append(", securityNumber=").append(securityNumber);
-        sb.append(", hireDate=").append(hireDate);
-        sb.append(", soldVacation=").append(soldVacation);
-        sb.append('}');
-        return sb.toString();
     }
 }
 

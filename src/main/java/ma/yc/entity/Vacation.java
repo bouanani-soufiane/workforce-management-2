@@ -23,8 +23,7 @@ public class Vacation {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-
-    public Long id () {
+    public Long getId () {
         return id;
     }
 
@@ -33,7 +32,7 @@ public class Vacation {
         return this;
     }
 
-    public LocalDate startDate () {
+    public LocalDate getStartDate () {
         return startDate;
     }
 
@@ -42,7 +41,7 @@ public class Vacation {
         return this;
     }
 
-    public LocalDate endDate () {
+    public LocalDate getEndDate () {
         return endDate;
     }
 
@@ -51,7 +50,7 @@ public class Vacation {
         return this;
     }
 
-    public String reason () {
+    public String getReason () {
         return reason;
     }
 
@@ -60,7 +59,7 @@ public class Vacation {
         return this;
     }
 
-    public VacationStatus vacationStatus () {
+    public VacationStatus getVacationStatus () {
         return vacationStatus;
     }
 
@@ -69,7 +68,7 @@ public class Vacation {
         return this;
     }
 
-    public String certificate () {
+    public String getCertificate () {
         return certificate;
     }
 
@@ -78,7 +77,7 @@ public class Vacation {
         return this;
     }
 
-    public Employee employee () {
+    public Employee getEmployee () {
         return employee;
     }
 

@@ -9,7 +9,7 @@ public interface DefaultRepository<Entity> {
 
     boolean delete ( Entity entity );
 
-    Entity findById ( int id );
+    Entity findById ( Long id );
 
     List<Entity> findAll ();
 

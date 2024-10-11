@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee findById ( int id ) {
+    public Employee findById ( Long id ) {
         return repository.findById(id);
     }
 

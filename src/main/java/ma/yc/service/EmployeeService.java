@@ -11,7 +11,7 @@ public interface EmployeeService {
 
     boolean delete ( Employee employee );
 
-    Employee findById ( int id );
+    Employee findById ( Long id );
 
     List<Employee> findAll ();
 }

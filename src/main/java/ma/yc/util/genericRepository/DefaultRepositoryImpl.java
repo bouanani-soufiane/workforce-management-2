@@ -73,7 +73,7 @@ public class DefaultRepositoryImpl<Entity> implements DefaultRepository<Entity> 
 
     @Override
 
-    public Entity findById ( int id ) {
+    public Entity findById ( Long id ) {
         EntityManager entityManager = EntityManagerProvider.getInstance().getEntityManager();
         try {
             return entityManager.find(entityType, id);

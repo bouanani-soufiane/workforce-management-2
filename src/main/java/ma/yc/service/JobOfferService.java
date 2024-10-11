@@ -12,7 +12,7 @@ public interface JobOfferService extends DefaultRepository<JobOffer> {
 
     boolean delete ( JobOffer employee );
 
-    JobOffer findById ( int id );
+    JobOffer findById ( Long id );
 
     List<JobOffer> findAll ();
 }

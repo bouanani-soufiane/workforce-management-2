@@ -11,7 +11,7 @@ public interface VacationService {
 
     boolean delete ( Vacation employee );
 
-    Vacation findById ( int id );
+    Vacation findById ( Long id );
 
     List<Vacation> findAll ();
 }
