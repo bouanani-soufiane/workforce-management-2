@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@WebServlet(name = "em", value = {"/", "/employee/create", "/employee/edit", "/employee/store", "/employee/update/employee/", "/employee/delete", "/employee/search", "/employee/filter"})
+@WebServlet(name = "em", value = {"/", "/employee/create", "/employee/edit", "/employee/store", "/employee/update/", "/employee/delete", "/employee/search", "/employee/filter"})
 public class EmployeeServlet extends HttpServlet {
 
     private static final String ACTION_HOME = "/";
@@ -61,6 +61,7 @@ public class EmployeeServlet extends HttpServlet {
             case ACTION_EDIT:
                 editEmployee(req, res);
                 break;
+
             default:
                 res.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 break;
@@ -78,14 +79,14 @@ public class EmployeeServlet extends HttpServlet {
                 break;
             case ACTION_UPDATE:
                 updateEmployee(req, res);
-            case ACTION_DELETE:
-                doDelete(req, res);
-                break;
             case ACTION_SEARCH:
                 searchEmployee(req, res);
                 break;
             case ACTION_FILTER:
                 filterByDepartment(req, res);
+                break;
+            case ACTION_DELETE:
+                doDelete(req, res);
                 break;
             default:
                 writeResponse(res, HttpServletResponse.SC_BAD_REQUEST, "Invalid action: " + action);
@@ -154,16 +155,21 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doDelete ( HttpServletRequest req, HttpServletResponse resp ) throws IOException {
 
-        final int id = Integer.parseInt(req.getParameter("id"));
+        String idParam = req.getParameter("id");
+        Long id = Long.parseLong(idParam);
 
-        boolean deleted = service.delete(new Employee());
+        Employee employee = service.findById(id);
+        boolean deleted = service.delete(employee);
 
         if (deleted) {
-            resp.sendRedirect("/");
+            resp.sendRedirect("/workforce");
         } else {
             writeResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Employee not found");
         }
     }
+
+
+
 
     private void updateEmployee ( HttpServletRequest req, HttpServletResponse res ) {
         try {

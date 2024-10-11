@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<div class="container">
     <h1>Welcome To Employees List</h1>
 
 
@@ -25,11 +24,9 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Address</th>
             <th>Birth Date</th>
             <th>Department</th>
             <th>hire Date</th>
@@ -46,7 +43,6 @@
             <c:when test="${not empty employeeList}">
                 <c:forEach var="emp" items="${employeeList}">
                     <tr>
-                        <td>${emp.id}</td>
                         <td>${emp.name}</td>
                         <td>${emp.email}</td>
                         <td>${emp.phone}</td>
@@ -59,12 +55,13 @@
                         <td>${emp.soldVacation}</td>
                         <td>${emp.famillyAllowance.salary}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/edit?id=${emp.id}" class="edit-link">Edit</a>
+                            <a href="${pageContext.request.contextPath}/employee/edit?id=${emp.id}" class="edit-link">Edit</a>
                         </td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/delete?id=${emp.id}" method="post">
+                            <form action="/workforce/employee/delete?id=${emp.id}" method="post">
                                 <button class="deletebtn">Delete</button>
                             </form>
+
                         </td>
                     </tr>
                 </c:forEach>
@@ -78,6 +75,3 @@
         </tbody>
     </table>
 
-    <div id="result"></div>
-
-</div>

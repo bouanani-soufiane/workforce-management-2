@@ -5,7 +5,7 @@
 <head>
     <title>Employee Management</title>
     <style>
-        <%@include file="../style.css" %>
+        <%@include file="../style/style.css" %>
     </style>
 </head>
 <body>
