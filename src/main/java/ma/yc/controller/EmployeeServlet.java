@@ -39,13 +39,12 @@ public class EmployeeServlet extends HttpServlet {
     private Weld weld;
 
     @Override
-    public void init() {
+    public void init () {
         this.weld = new Weld();
         WeldContainer container = weld.initialize();
         this.service = container.select(EmployeeService.class).get();
         this.objectMapper = new ObjectMapper();
     }
-
 
 
     @Override
@@ -62,9 +61,8 @@ public class EmployeeServlet extends HttpServlet {
             case ACTION_EDIT:
                 editEmployee(req, res);
                 break;
-
             default:
-                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                writeResponse(res, HttpServletResponse.SC_BAD_REQUEST, "Invalid action: " + action);
                 break;
         }
     }
@@ -171,8 +169,7 @@ public class EmployeeServlet extends HttpServlet {
     }
 
 
-
-    private void updateEmployee(HttpServletRequest req, HttpServletResponse res) {
+    private void updateEmployee ( HttpServletRequest req, HttpServletResponse res ) {
         try {
             Long id = Long.parseLong(req.getParameter("id"));
             Employee employee = service.findById(id);
@@ -271,7 +268,7 @@ public class EmployeeServlet extends HttpServlet {
     }
 
     @Override
-    public void destroy() {
+    public void destroy () {
         if (weld != null) {
             weld.shutdown();
         }
