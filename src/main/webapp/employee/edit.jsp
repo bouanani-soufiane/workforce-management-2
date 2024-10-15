@@ -104,7 +104,7 @@
                                    value="<%= employee.getFamillyAllowance().getSalary()%>" required><br><br>
 
                         </div>
-                        <input type="submit" value="Add Employee">
+                        <input type="submit" value="Edit Employee">
                     </form>
 
                 </div>

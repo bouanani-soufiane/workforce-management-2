@@ -4,5 +4,6 @@ import ma.yc.entity.Employee;
 import ma.yc.util.genericRepository.DefaultRepository;
 
 public interface EmployeeRepository extends DefaultRepository<Employee> {
+    boolean decrementVacationSold ( Employee employee, long sold );
 
 }

@@ -354,3 +354,51 @@ input[type="submit"]:hover {
         width: 100%;
     }
 }
+
+input[type="date"],input[type="month"],input[type="week"],input[type="datetime-local"],input[type="time"] {
+    display:block;
+    position:relative;
+    padding:0.5rem 2rem 0.5rem 0.75rem;
+    font-size:1rem;
+    font-family:monospace;
+    border:1px solid #8292a2;
+    background:white url("http://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Calendar-icon.png") right 0.5rem center no-repeat;
+    background-size:20px 20px;
+    cursor:text;
+}
+::-webkit-datetime-edit-text {
+    opacity:0;
+}
+::-webkit-clear-button,
+::-webkit-inner-spin-button {
+    display:none;
+}
+::-webkit-calendar-picker-indicator {
+    position:absolute;
+    width:1.5rem;
+    height:100%;
+    top:0;
+    right:0;
+    bottom:0;
+    opacity:0;
+    cursor:pointer;
+    color:rgba(0, 120, 250, 1);
+    background:rgba(0, 120, 250, 1);
+
+}
+
+input[type="date"]:hover::-webkit-calendar-picker-indicator,
+input[type="month"]:hover::-webkit-calendar-picker-indicator,
+input[type="week"]:hover::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]:hover::-webkit-calendar-picker-indicator,
+input[type="time"]:hover::-webkit-calendar-picker-indicator{ opacity:0.05; }
+input[type="date"]:hover::-webkit-calendar-picker-indicator:hover,
+input[type="month"]:hover::-webkit-calendar-picker-indicator:hover,
+input[type="week"]:hover::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]:hover::-webkit-calendar-picker-indicator:hover,
+input[type="time"]:hover::-webkit-calendar-picker-indicator:hover { opacity:0.15; }
+
+
+.date-picker input{
+    width: 97%;
+}

@@ -17,42 +17,43 @@
         <div class="charts">
             <div class="charts-card">
                 <div class="container">
-                    <h2>Add Offer</h2>
+                    <h2>Add Vacation</h2>
 
-                    <form id="offerForm">
-                        <div>
-                            <label for="title">title:</label>
-                            <input type="text" id="title" name="title" required><br><br>
+                    <form id="vacationForm">
+                        <div class="date-picker">
+                            <label for="dateStart">date start:</label>
+                            <input type="date" id="dateStart" class="date" name="dateStart"  required><br><br>
+                        </div>
+
+                        <div class="date-picker">
+                            <label for="dateEnd">date end:</label>
+                            <input type="date" id="dateEnd" name="dateEnd" class="date" required><br><br>
                         </div>
 
                         <div>
-                            <label for="description">description:</label>
-                            <input type="text" id="description" name="description" required><br><br>
-                        </div>
-
-                        <div>
-                            <label for="requiredSkills">requiredSkills:</label>
-                            <input type="text" id="requiredSkills" name="requiredSkills" required><br><br>
+                            <label for="reason">reason:</label>
+                            <input type="text" id="reason" name="reason" required><br><br>
 
                         </div>
                         <div>
-                            <label for="dateEnd">dateEnd:</label>
-                            <input type="datetime-local" id="dateEnd" name="dateEnd"  required><br><br>
+<%--                            <label for="certificate">certificate:</label>--%>
+<%--                            <input type="file" id="certificate" name="certificate" accept=".pdf">--%>
+
                         </div>
-                        <input type="submit" value="Add offer">
+                        <input type="submit" value="Add vacation">
                     </form>
 
                 </div>
 
                 <script>
-                    const form = document.getElementById('offerForm');
+                    const form = document.getElementById('vacationForm');
                     const successAlert = document.getElementById('successAlert');
                     const errorAlert = document.getElementById('errorAlert');
                     form.addEventListener('submit', function (event) {
                         event.preventDefault();
                         const formData = new URLSearchParams(new FormData(this)).toString();
 
-                        fetch("/workforce/offer/store", {
+                        fetch("/workforce/vacation/store", {
                             method: "POST",
                             body: formData,
                             headers: {
@@ -86,10 +87,12 @@
                             });
                     });
                     function setMinDate() {
-                        const dateInput = document.getElementById('dateEnd');
+                        const dateInputs = document.querySelectorAll(".date");
                         const today = new Date();
-                        const minDate = today.toISOString().slice(0, 16);
-                        dateInput.setAttribute('min', minDate);
+                        const minDate = today.toISOString().split("T")[0];
+                        dateInputs.forEach(input => {
+                            input.setAttribute('min', minDate);
+                        });
                     }
                     window.onload = setMinDate;
                 </script>

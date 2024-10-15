@@ -1,10 +1,15 @@
-<footer>
-    <div class="footer-content">
-        <p>&copy; 2024 Employee Management System. All rights reserved.</p>
-        <p>Follow us on
-            <a href="#">Twitter</a>,
-            <a href="#">Facebook</a>,
-            <a href="#">LinkedIn</a>
-        </p>
+
+
+<section class="footer">
+    <h4>About Us</h4>
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima animi et voluptate, laudantium itaque, vitae
+        aspernatur repellendus optio, enim quam totam <br> ad Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+        Tempore suscipit cum non.</p>
+    <div class="icons">
+        <i class="fa-brands fa-facebook"></i>
+        <i class="fa-brands fa-twitter"></i>
+        <i class="fa-brands fa-instagram"></i>
+        <i class="fa-brands fa-linkedin"></i>
     </div>
-</footer>
+    <p>Made With love</p>
+</section>

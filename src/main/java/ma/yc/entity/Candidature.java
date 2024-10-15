@@ -17,6 +17,7 @@ public class Candidature {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
     private LocalDateTime submissionDate;
+    private String resume;
 
     @ManyToOne()
     @JoinColumn(name = "jobOffer_id")
@@ -82,6 +83,15 @@ public class Candidature {
 
     public Candidature setJobOffer ( JobOffer jobOffer ) {
         this.jobOffer = jobOffer;
+        return this;
+    }
+
+    public String getResume () {
+        return resume;
+    }
+
+    public Candidature setResume ( String resume ) {
+        this.resume = resume;
         return this;
     }
 }

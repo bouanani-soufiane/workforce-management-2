@@ -1,8 +1,6 @@
 package ma.yc.service;
 
 import ma.yc.entity.Candidature;
-import ma.yc.entity.Candidature;
-import ma.yc.util.genericRepository.DefaultRepository;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@
 <aside id="sidebar">
     <div class="sidebar-title">
         <div class="sidebar-brand">
-            <span class="material-icons-outlined">inventory</span> Bob's Inventory
+            <span class="material-icons-outlined">inventory</span> Workforce
         </div>
         <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
     </div>
@@ -19,30 +19,11 @@
             </a>
         </li>
         <li class="sidebar-list-item">
-            <a href="#">
-                <span class="material-icons-outlined">fact_check</span> Inventory
+            <a href="${pageContext.request.contextPath}/vacation">
+                <span class="material-icons-outlined">inventory_2</span> vacations
             </a>
         </li>
-        <li class="sidebar-list-item">
-            <a href="#">
-                <span class="material-icons-outlined">add_shopping_cart</span> Purchase Orders
-            </a>
-        </li>
-        <li class="sidebar-list-item">
-            <a href="#">
-                <span class="material-icons-outlined">shopping_cart</span> Sales Orders
-            </a>
-        </li>
-        <li class="sidebar-list-item">
-            <a href="#">
-                <span class="material-icons-outlined">poll</span> Reports
-            </a>
-        </li>
-        <li class="sidebar-list-item">
-            <a href="#">
-                <span class="material-icons-outlined">settings</span> Settings
-            </a>
-        </li>
+
     </ul>
 </aside>
 <!-- End Sidebar -->

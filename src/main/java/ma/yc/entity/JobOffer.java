@@ -79,7 +79,7 @@ public class JobOffer {
         return this;
     }
 
-    public boolean isActive () {
+    public boolean getIsActive () {
         return isActive;
     }
 

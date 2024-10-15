@@ -1,12 +1,13 @@
 package ma.yc.service.impl;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import ma.yc.entity.Candidature;
 import ma.yc.repository.CandidatureRepository;
 import ma.yc.service.CandidatureService;
 
 import java.util.List;
-
+@ApplicationScoped
 public class CandidatureServiceImpl implements CandidatureService {
 
     private final CandidatureRepository repository;

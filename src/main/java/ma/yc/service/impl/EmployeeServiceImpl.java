@@ -42,4 +42,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAll () {
         return repository.findAll();
     }
+
+    @Override
+    public List<Employee> filterByDepartment ( String[] value ) {
+        return List.of();
+    }
+
+    @Override
+    public List<Employee> search ( String value ) {
+        return List.of();
+    }
 }

@@ -1,6 +1,7 @@
 package ma.yc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,8 +11,6 @@ import ma.yc.entity.Employee;
 import ma.yc.entity.FamillyAllowance;
 import ma.yc.entity.valueObject.SocialSecurityNumber;
 import ma.yc.service.EmployeeService;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,18 +33,10 @@ public class EmployeeServlet extends HttpServlet {
     private static final String ACTION_SEARCH = "/employee/search";
     private static final String ACTION_FILTER = "/employee/filter";
 
+    @Inject
     private EmployeeService service;
+    @Inject
     private ObjectMapper objectMapper;
-    private Weld weld;
-
-    @Override
-    public void init () {
-        this.weld = new Weld();
-        WeldContainer container = weld.initialize();
-        this.service = container.select(EmployeeService.class).get();
-        this.objectMapper = new ObjectMapper();
-    }
-
 
     @Override
     protected void doGet ( HttpServletRequest req, HttpServletResponse res ) throws ServletException, IOException {
@@ -106,21 +97,21 @@ public class EmployeeServlet extends HttpServlet {
             }
         }
 
-//        String jsonString = sb.toString();
-//        String[] selectedDepartments = objectMapper.readValue(jsonString, String[].class);
-//
-//        List<Employee> filteredEmployees;
-//
-//        if (selectedDepartments != null && selectedDepartments.length > 0) {
-//            filteredEmployees = service.filterByDepartment(selectedDepartments);
-//        } else {
-//            filteredEmployees = service.findAll();
-//        }
-//
-//        String jsonResponse = objectMapper.writeValueAsString(filteredEmployees);
-//
-//        res.getWriter().write(jsonResponse);
-//        res.setStatus(HttpServletResponse.SC_OK);
+        String jsonString = sb.toString();
+        String[] selectedDepartments = objectMapper.readValue(jsonString, String[].class);
+
+        List<Employee> filteredEmployees;
+
+        if (selectedDepartments != null && selectedDepartments.length > 0) {
+            filteredEmployees = service.filterByDepartment(selectedDepartments);
+        } else {
+            filteredEmployees = service.findAll();
+        }
+
+        String jsonResponse = objectMapper.writeValueAsString(filteredEmployees);
+
+        res.getWriter().write(jsonResponse);
+        res.setStatus(HttpServletResponse.SC_OK);
     }
 
 
@@ -137,18 +128,18 @@ public class EmployeeServlet extends HttpServlet {
         Map<String, String> jsonMap = objectMapper.readValue(jsonString, Map.class);
         String search = jsonMap.get("searchTerm");
 
-//        if (search == null || search.isEmpty()) {
-//            writeResponse(res, HttpServletResponse.SC_BAD_REQUEST, "Search query is missing");
-//        } else {
-//            List<Employee> employees = service.search(search);
-//            if (employees.isEmpty()) {
-//                writeResponse(res, HttpServletResponse.SC_NOT_FOUND, "No employees found for search query: " + search);
-//            } else {
-//                String jsonResponse = objectMapper.writeValueAsString(employees);
-//                res.getWriter().write(jsonResponse);
-//                res.setStatus(HttpServletResponse.SC_OK);
-//            }
-//        }
+        if (search == null || search.isEmpty()) {
+            writeResponse(res, HttpServletResponse.SC_BAD_REQUEST, "Search query is missing");
+        } else {
+            List<Employee> employees = service.search(search);
+            if (employees.isEmpty()) {
+                writeResponse(res, HttpServletResponse.SC_NOT_FOUND, "No employees found for search query: " + search);
+            } else {
+                String jsonResponse = objectMapper.writeValueAsString(employees);
+                res.getWriter().write(jsonResponse);
+                res.setStatus(HttpServletResponse.SC_OK);
+            }
+        }
     }
 
 
@@ -266,12 +257,4 @@ public class EmployeeServlet extends HttpServlet {
             this.message = message;
         }
     }
-
-    @Override
-    public void destroy () {
-        if (weld != null) {
-            weld.shutdown();
-        }
-    }
-
 }

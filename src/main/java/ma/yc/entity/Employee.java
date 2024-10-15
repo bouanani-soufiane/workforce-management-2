@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import ma.yc.entity.valueObject.SocialSecurityNumber;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class Employee extends Person {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "famillyAllowance_id")
     private FamillyAllowance famillyAllowance;
-
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vacation> vacations = new ArrayList<>();
@@ -135,5 +133,35 @@ public class Employee extends Person {
         this.jobOffers = jobOffers;
         return this;
     }
+
+
+    public double calcFamillyAllowance () {
+        if (famillyAllowance == null) {
+            return 0.0;
+        }
+        int childrenCount = famillyAllowance.getChildrenCount();
+        double salary = famillyAllowance.getSalary();
+        double totalAllowance = 0.0;
+
+        if (salary < 6000) {
+            for (int i = 1; i <= childrenCount; i++) {
+                if (i <= 3) {
+                    totalAllowance += 300;
+                } else if (i <= 6) {
+                    totalAllowance += 150;
+                }
+            }
+        } else if (salary > 8000) {
+            for (int i = 1; i <= childrenCount; i++) {
+                if (i <= 3) {
+                    totalAllowance += 200;
+                } else if (i <= 6) {
+                    totalAllowance += 110;
+                }
+            }
+        }
+        return totalAllowance;
+    }
+
 }
 

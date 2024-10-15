@@ -1,6 +1,7 @@
 package ma.yc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,11 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ma.yc.entity.JobOffer;
 import ma.yc.service.JobOfferService;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @WebServlet(name = "offer", value = {"/offer", "/offer/create", "/offer/edit", "/offer/store", "/offer/update", "/offer/delete"})
@@ -25,16 +25,10 @@ public class OfferServlet extends HttpServlet {
     private static final String ACTION_UPDATE = "/offer/update";
     private static final String ACTION_DELETE = "/offer/delete";
 
+    @Inject
     ObjectMapper objectMapper;
-    private Weld weld;
+    @Inject
     private JobOfferService service;
-
-    public void init () {
-        this.weld = new Weld();
-        WeldContainer container = weld.initialize();
-        this.service = container.select(JobOfferService.class).get();
-        this.objectMapper = new ObjectMapper();
-    }
 
     public void doGet ( HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException {
         final String action = req.getServletPath();
@@ -67,20 +61,73 @@ public class OfferServlet extends HttpServlet {
             case ACTION_DELETE:
                 this.deleteOffer(req, resp);
                 break;
-
-
+            default:
+                writeResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid action: " + action);
+                break;
         }
     }
 
     private void deleteOffer ( HttpServletRequest req, HttpServletResponse resp ) {
+        String idParam = req.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            writeResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid or missing offer ID.");
+            return;
+        }
+        try {
+            Long id = Long.parseLong(idParam);
+            JobOffer offer = service.findById(id);
+            if (offer == null) {
+                writeResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Offer not found.");
+            } else {
+                service.delete(offer);
+                resp.sendRedirect(req.getContextPath() + "/offer");
+            }
+        } catch (NumberFormatException e) {
+            writeResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid offer ID format.");
+        } catch (Exception e) {
+            writeResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while deleting the offer.");
+            e.printStackTrace();
+        }
     }
+
 
     private void updateOffer ( HttpServletRequest req, HttpServletResponse resp ) {
 
     }
 
     private void storeOffers ( HttpServletRequest req, HttpServletResponse resp ) {
+        try {
+            String title = req.getParameter("title");
+            String description = req.getParameter("description");
+            String requiredSkills = req.getParameter("requiredSkills");
+            String dateEndParam = req.getParameter("dateEnd");
 
+            if (title == null || title.isEmpty() || description == null || description.isEmpty() || requiredSkills == null || requiredSkills.isEmpty() || dateEndParam == null || dateEndParam.isEmpty()) {
+
+                writeResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "All fields are required.");
+                return;
+            }
+
+            LocalDateTime dateEnd;
+            dateEnd = LocalDateTime.parse(dateEndParam);
+
+            JobOffer offer = new JobOffer();
+            offer.setTitle(title);
+            offer.setDescription(description);
+            offer.setRequiredSkills(requiredSkills);
+            offer.setDatePublish(LocalDateTime.now());
+            offer.setActive(true);
+            offer.setDateEnd(dateEnd);
+            service.create(offer);
+            writeResponse(resp, HttpServletResponse.SC_CREATED, "Offer " + offer.getTitle() + " created successfully");
+
+            String redirectPath = req.getContextPath() + "/offer";
+            resp.sendRedirect(redirectPath);
+
+        } catch (Exception e) {
+            writeResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while creating the offer.");
+            e.printStackTrace();
+        }
     }
 
 
@@ -94,8 +141,8 @@ public class OfferServlet extends HttpServlet {
 
     }
 
-    private void createOffer ( HttpServletRequest req, HttpServletResponse resp ) {
-
+    private void createOffer ( HttpServletRequest req, HttpServletResponse resp ) throws IOException, ServletException {
+        req.getRequestDispatcher("/offer/create.jsp").forward(req, resp);
     }
 
 
@@ -117,10 +164,5 @@ public class OfferServlet extends HttpServlet {
         }
     }
 
-    @Override
-    public void destroy () {
-        if (weld != null) {
-            weld.shutdown();
-        }
-    }
+
 }

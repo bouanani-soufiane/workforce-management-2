@@ -14,4 +14,9 @@ public interface VacationService {
     Vacation findById ( Long id );
 
     List<Vacation> findAll ();
+
+    boolean setStatusRejected ( Vacation vacation );
+
+    boolean setStatusAccepted ( Vacation vacation );
+
 }

@@ -14,12 +14,12 @@ public class Vacation {
     private LocalDate startDate;
     private LocalDate endDate;
     private String reason;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private VacationStatus vacationStatus;
 
     private String certificate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 

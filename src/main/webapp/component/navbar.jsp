@@ -1,25 +1,14 @@
-<header>
-    <div class="nav-wrapper">
-        <div class="logo-container">
-            <img class="logo" src="https://i.imgur.com/Eltocoj.png" alt="Logo">
-        </div>
-        <nav>
-            <input class="hidden" type="checkbox" id="menuToggle">
-            <label class="menu-btn" for="menuToggle">
-                <div class="menu"></div>
-                <div class="menu"></div>
-                <div class="menu"></div>
-            </label>
-            <div class="nav-container">
-                <ul class="nav-tabs">
-                    <li class="nav-tab">Home</li>
-                    <li class="nav-tab">Products</li>
-                    <li class="nav-tab">Services</li>
-                    <li class="nav-tab">FAQ</li>
-                    <li class="nav-tab">Contact</li>
-                    <li class="nav-tab">Careers</li>
-                </ul>
-            </div>
-        </nav>
+<nav>
+    <div class="logo">
+        <a href="#"><span>Z</span>🌑</a>
     </div>
-</header>
+    <div class="nav-links" id="navLinks">
+        <i class="fa fa-times" onclick="hideMenu()"></i>
+        <ul>
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#Offer">OFFER</a></li>
+
+        </ul>
+    </div>
+    <i class="fa fa-bars" onclick="showMenu()"></i>
+</nav>
