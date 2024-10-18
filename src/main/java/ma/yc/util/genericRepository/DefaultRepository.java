@@ -1,6 +1,7 @@
 package ma.yc.util.genericRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DefaultRepository<Entity> {
     boolean create ( Entity entity );
@@ -9,7 +10,7 @@ public interface DefaultRepository<Entity> {
 
     boolean delete ( Entity entity );
 
-    Entity findById ( Long id );
+    Optional<Entity> findById ( Long id );
 
     List<Entity> findAll ();
 

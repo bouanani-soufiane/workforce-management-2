@@ -19,7 +19,7 @@ public class Vacation {
 
     private String certificate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "employee_id")
     private Employee employee;
 

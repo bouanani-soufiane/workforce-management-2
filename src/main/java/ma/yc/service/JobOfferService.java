@@ -5,7 +5,7 @@ import ma.yc.util.genericRepository.DefaultRepository;
 
 import java.util.List;
 
-public interface JobOfferService extends DefaultRepository<JobOffer> {
+public interface JobOfferService  {
     boolean create ( JobOffer employee );
 
     boolean update ( JobOffer employee );

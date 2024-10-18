@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import ma.yc.entity.Employee;
 import ma.yc.entity.Vacation;
+import ma.yc.exception.EntityNotFoundException;
 import ma.yc.repository.EmployeeRepository;
 import ma.yc.repository.VacationRepository;
 import ma.yc.service.VacationService;
@@ -56,7 +57,7 @@ public class VacationServiceImpl implements VacationService {
 
     @Override
     public Vacation findById ( Long id ) {
-        return repository.findById(id);
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("vacation" , id));
     }
 
     @Override

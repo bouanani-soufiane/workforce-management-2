@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import ma.yc.util.EntityManagerProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DefaultRepositoryImpl<Entity> implements DefaultRepository<Entity> {
     private Class<Entity> entityType;
@@ -73,16 +74,16 @@ public class DefaultRepositoryImpl<Entity> implements DefaultRepository<Entity> 
 
     @Override
 
-    public Entity findById ( Long id ) {
+    public Optional<Entity> findById ( Long id ) {
         EntityManager entityManager = EntityManagerProvider.getInstance().getEntityManager();
         try {
-            return entityManager.find(entityType, id);
+            return Optional.ofNullable(entityManager.find(entityType, id));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             entityManager.close();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

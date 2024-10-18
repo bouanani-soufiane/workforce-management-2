@@ -1,4 +1,4 @@
-package ma.yc.util;
+package ma.yc.util.producers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -8,8 +8,7 @@ import jakarta.enterprise.inject.Produces;
 public class ObjectMapperProducer {
 
     @Produces
-    public ObjectMapper produceObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper;
+    public ObjectMapper produceObjectMapper () {
+        return new ObjectMapper();
     }
 }

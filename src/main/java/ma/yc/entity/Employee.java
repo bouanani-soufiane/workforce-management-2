@@ -1,6 +1,7 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import ma.yc.entity.valueObject.SocialSecurityNumber;
 
 import java.time.LocalDate;
@@ -11,14 +12,28 @@ import java.util.List;
 @Table(name = "employees")
 public class Employee extends Person {
 
+
+    @Pattern(regexp = "^(\\+212\\s?|0)(6|7)[0-9]{8}|((0(2|5)[0-9]{7}))$",
+            message = "Phone must be a valid Moroccan format (e.g., 0601234567 or +212 6 0123 4567)")
     private String phone;
+
+    @NotBlank(message = "Department cannot be blank")
     private String departement;
+
+    @NotBlank(message = "Job title cannot be blank")
     private String jobTitle;
+
+    @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
+
     @Embedded
     private SocialSecurityNumber securityNumber;
 
+    @PastOrPresent(message = "Hire date cannot be in the future")
     private LocalDate hireDate;
+
+    @Positive(message = "Vacation days must be a positive number")
+    @Max(value = 30, message = "Vacation days cannot exceed 30")
     private Integer soldVacation;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -134,7 +149,6 @@ public class Employee extends Person {
         return this;
     }
 
-
     public double calcFamillyAllowance () {
         if (famillyAllowance == null) {
             return 0.0;
@@ -163,5 +177,7 @@ public class Employee extends Person {
         return totalAllowance;
     }
 
+
 }
+
 

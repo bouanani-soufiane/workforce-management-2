@@ -3,6 +3,7 @@ package ma.yc.service.impl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import ma.yc.entity.Candidature;
+import ma.yc.exception.EntityNotFoundException;
 import ma.yc.repository.CandidatureRepository;
 import ma.yc.service.CandidatureService;
 
@@ -11,7 +12,6 @@ import java.util.List;
 public class CandidatureServiceImpl implements CandidatureService {
 
     private final CandidatureRepository repository;
-
     @Inject
     public CandidatureServiceImpl ( CandidatureRepository repository ) {
         this.repository = repository;
@@ -34,7 +34,7 @@ public class CandidatureServiceImpl implements CandidatureService {
 
     @Override
     public Candidature findById ( Long id ) {
-        return repository.findById(id);
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("candidature" , id));
     }
 
     @Override
