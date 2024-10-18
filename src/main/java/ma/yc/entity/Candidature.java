@@ -1,6 +1,7 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import ma.yc.enums.ApplicationStatus;
 
 import java.time.LocalDateTime;
@@ -11,14 +12,26 @@ public class Candidature {
     @Id
     @GeneratedValue
     private Long id;
+    @NotBlank(message = "Name cannot be blank")
     private String name;
-    private String email;
-    private String skills;
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus applicationStatus;
-    private LocalDateTime submissionDate;
-    private String resume;
 
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email should be valid")
+    private String email;
+
+    @NotBlank(message = "Skills cannot be blank")
+    @Size(max = 255, message = "Skills must not exceed 255 characters")
+    private String skills;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Application status must be specified")
+    private ApplicationStatus applicationStatus;
+
+    @NotNull(message = "Submission date cannot be null")
+    private LocalDateTime submissionDate;
+
+    @NotBlank(message = "Resume cannot be blank")
+    private String resume;
     @ManyToOne()
     @JoinColumn(name = "jobOffer_id")
     private JobOffer jobOffer;
