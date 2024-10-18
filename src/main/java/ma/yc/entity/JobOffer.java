@@ -1,6 +1,9 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,10 +14,20 @@ public class JobOffer {
     @Id
     @GeneratedValue
     private Long id;
+    @NotBlank(message = "Title is required")
     private String title;
+
+    @NotBlank(message = "Description is required")
     private String description;
+
+    @NotBlank(message = "Required skills are required")
     private String requiredSkills;
+
+    @NotNull(message = "Publish date is required")
     private LocalDateTime datePublish;
+
+    @NotNull(message = "End date is required")
+    @Future(message = "End date must be in the future")
     private LocalDateTime dateEnd;
     private boolean isActive;
 
