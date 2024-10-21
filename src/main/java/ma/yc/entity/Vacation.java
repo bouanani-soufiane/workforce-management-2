@@ -1,6 +1,7 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import ma.yc.enums.VacationStatus;
 
 import java.time.LocalDate;
@@ -11,16 +12,29 @@ public class Vacation {
     @Id
     @GeneratedValue
     private Long id;
+
+
+    @NotNull(message = "Start date is required")
+    @Future(message = "Start date must be in the future")
     private LocalDate startDate;
+
+    @NotNull(message = "End date is required")
+    @Future(message = "End date must be in the future")
+    @AssertTrue(message = "End date must be after start date")
     private LocalDate endDate;
+
+    @NotBlank(message = "Reason is required")
     private String reason;
+
     @Enumerated(EnumType.STRING)
     private VacationStatus vacationStatus;
 
+    @Size(max = 255, message = "Certificate must be at most 255 characters")
     private String certificate;
 
     @ManyToOne()
     @JoinColumn(name = "employee_id")
+    @NotNull(message = "Employee is required")
     private Employee employee;
 
     public Long getId () {
