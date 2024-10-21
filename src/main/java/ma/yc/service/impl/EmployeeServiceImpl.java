@@ -39,6 +39,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public boolean delete ( Employee employee ) {
+        if (repository.findById(employee.getId()).isEmpty()) {
+            throw new EntityNotFoundException("employee", employee.getId());
+        }
         return repository.delete(employee);
     }
 

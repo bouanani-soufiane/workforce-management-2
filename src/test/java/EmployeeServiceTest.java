@@ -139,7 +139,7 @@ public class EmployeeServiceTest {
         @Test
         @DisplayName("should throw exception create employee when giving invalid data")
         void shouldThrow_ValidationError () {
-            Employee invalidEmployee = new Employee();
+            var invalidEmployee = new Employee();
 
             var mockPath = mock(Path.class);
             var mockViolation = mock(ConstraintViolation.class);
