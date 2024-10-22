@@ -1,6 +1,8 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -11,9 +13,16 @@ public class HistoryUpdate {
     @GeneratedValue
     private Long id;
 
+    @NotNull(message = "Update time cannot be null")
     private LocalDateTime updatedAt;
+
+    @NotBlank(message = "Updated column name cannot be blank")
     private String updatedColumn;
+
+    @NotBlank(message = "Old value cannot be blank")
     private String oldValue;
+
+    @NotBlank(message = "New value cannot be blank")
     private String newValue;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,4 +1,4 @@
-package ma.yc.util.genericRepository;
+package ma.yc.util.persistence;
 
 import java.util.List;
 import java.util.Optional;

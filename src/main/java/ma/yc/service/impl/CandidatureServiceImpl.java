@@ -12,6 +12,8 @@ import ma.yc.service.CandidatureService;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CandidatureServiceImpl implements CandidatureService {
@@ -23,27 +25,21 @@ public class CandidatureServiceImpl implements CandidatureService {
     public CandidatureServiceImpl ( CandidatureRepository repository, Validator validator ) {
         this.repository = repository;
         this.validator = validator;
-
     }
 
     @Override
     public boolean create ( Candidature candidature ) {
-        validate(candidature);
-        return repository.create(candidature);
+        return validate(candidature, repository::create);
     }
 
     @Override
     public boolean update ( Candidature candidature ) {
-        validate(candidature);
-        return repository.update(candidature);
+        return validate(candidature, repository::update);
     }
 
     @Override
     public boolean delete ( Candidature candidature ) {
-        if (repository.findById(candidature.getId()).isEmpty()) {
-            throw new EntityNotFoundException("candidature", candidature.getId());
-        }
-        return repository.delete(candidature);
+        return repository.findById(candidature.getId()).map(found -> repository.delete(found)).orElseThrow(() -> new EntityNotFoundException("candidature", candidature.getId()));
     }
 
     @Override
@@ -56,12 +52,13 @@ public class CandidatureServiceImpl implements CandidatureService {
         return repository.findAll();
     }
 
-    private void validate ( Candidature candidature ) {
-        Set<ConstraintViolation<Candidature>> violations = validator.validate(candidature);
-        if (!violations.isEmpty()) {
-            violations.forEach(c -> System.out.println(c.getPropertyPath().toString() + " -> " + c.getMessage()));
-            throw new InvalidedRequestException("error candidature validation");
+    private <T> boolean validate ( T entity, Function<T, Boolean> operation ) {
+        Set<ConstraintViolation<T>> violations = validator.validate(entity);
+        if (violations.isEmpty()) {
+            return operation.apply(entity);
+        } else {
+            String errorMessage = violations.stream().map(v -> v.getPropertyPath() + " -> " + v.getMessage()).collect(Collectors.joining(", "));
+            throw new InvalidedRequestException("Error in candidature validation: " + errorMessage);
         }
     }
-
 }

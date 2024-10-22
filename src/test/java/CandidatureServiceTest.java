@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -31,13 +32,13 @@ public class CandidatureServiceTest {
     @Mock
     private JobOfferRepository jobOfferRepository;
 
-    @Mock
+    @Spy
     private Validator validator;
 
     @InjectMocks
     private CandidatureServiceImpl candidatureService;
 
-    private Candidature createTestCandidature ( Long id ) {
+    private Candidature createTestCandidature(Long id) {
         Candidature candidature = new Candidature();
         candidature.setId(id);
         candidature.setName("John Doe");
@@ -54,7 +55,7 @@ public class CandidatureServiceTest {
     class FindAll {
         @Test
         @DisplayName("should return all candidatures if they exist")
-        void shouldReturn_AllCandidatures () {
+        void shouldReturn_AllCandidatures() {
             List<Candidature> expected = List.of(createTestCandidature(1L), createTestCandidature(2L));
             when(candidatureRepository.findAll()).thenReturn(expected);
             List<Candidature> actual = candidatureService.findAll();
@@ -66,7 +67,7 @@ public class CandidatureServiceTest {
 
         @Test
         @DisplayName("should return no candidature if none exist")
-        void shouldReturn_NoCandidatures () {
+        void shouldReturn_NoCandidatures() {
             List<Candidature> expected = List.of();
             when(candidatureRepository.findAll()).thenReturn(expected);
             List<Candidature> actual = candidatureService.findAll();
@@ -82,7 +83,7 @@ public class CandidatureServiceTest {
     class FindById {
         @Test
         @DisplayName("should return candidature")
-        void shouldReturn_Candidature () {
+        void shouldReturn_Candidature() {
             Long id = 1L;
             Candidature candidature = createTestCandidature(id);
 
@@ -95,7 +96,7 @@ public class CandidatureServiceTest {
 
         @Test
         @DisplayName("should throw exception when candidature not found")
-        void shouldThrowException_whenCandidatureNotFound () {
+        void shouldThrowException_whenCandidatureNotFound() {
             Long id = 1L;
             when(candidatureRepository.findById(id)).thenReturn(Optional.empty());
             var exception = assertThrows(EntityNotFoundException.class, () -> candidatureService.findById(id));
@@ -110,16 +111,31 @@ public class CandidatureServiceTest {
     class Create {
         @Test
         @DisplayName("should create candidature when given valid data")
-        void shouldCreate_Candidature () {
+        void shouldCreate_Candidature() {
             Candidature candidature = createTestCandidature(null);
 
-            lenient().when(validator.validate(candidature)).thenReturn(Set.of());
+            when(validator.validate(candidature)).thenReturn(Set.of());
             when(candidatureRepository.create(candidature)).thenReturn(true);
 
             boolean actual = candidatureService.create(candidature);
 
             assertTrue(actual, "The candidature should be created successfully");
             verify(candidatureRepository).create(candidature);
+            verify(validator).validate(candidature);
+        }
+
+        @Test
+        @DisplayName("should not create candidature when given invalid data")
+        void shouldNotCreate_Candidature() {
+            Candidature candidature = createTestCandidature(null);
+            Set<String> violations = Set.of("Invalid email", "Missing skills");
+
+            doReturn(violations).when(validator).validate(candidature);
+            boolean actual = candidatureService.create(candidature);
+
+            assertFalse(actual, "The candidature should not be created");
+            verify(candidatureRepository, never()).create(candidature);
+            verify(validator).validate(candidature);
         }
     }
 
@@ -128,23 +144,26 @@ public class CandidatureServiceTest {
     class Delete {
         @Test
         @DisplayName("should delete candidature when exists")
-        void shouldDelete_Candidature () {
+        void shouldDelete_Candidature() {
             Long id = 1L;
             Candidature candidature = createTestCandidature(id);
-            lenient().when(candidatureRepository.findById(id)).thenReturn(Optional.of(candidature));
-            lenient().when(candidatureRepository.delete(candidature)).thenReturn(true);
+            when(candidatureRepository.findById(id)).thenReturn(Optional.of(candidature));
+            when(candidatureRepository.delete(candidature)).thenReturn(true);
+
             boolean result = candidatureService.delete(candidature);
 
             assertTrue(result);
             verify(candidatureRepository).delete(candidature);
+            verify(candidatureRepository).findById(id);
         }
 
         @Test
         @DisplayName("should throw exception when candidature to delete is not found")
-        void shouldThrowException_whenCandidatureNotFound () {
+        void shouldThrowException_whenCandidatureNotFound() {
             Long id = 1L;
             Candidature candidature = createTestCandidature(id);
             when(candidatureRepository.findById(id)).thenReturn(Optional.empty());
+
             var exception = assertThrows(EntityNotFoundException.class, () -> candidatureService.delete(candidature));
 
             assertEquals("candidature with id " + id + " not found", exception.getMessage());

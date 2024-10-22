@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -31,13 +32,13 @@ public class EmployeeServiceTest {
     @Mock
     private EmployeeRepository employeeRepository;
 
-    @Mock
+    @Spy
     private Validator validator;
 
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
-    private Employee createTestEmployee ( Long id ) {
+    private Employee createTestEmployee(Long id) {
         FamillyAllowance allowance = new FamillyAllowance();
         allowance.setSalary(8000);
         allowance.setChildrenCount(4);
@@ -61,13 +62,12 @@ public class EmployeeServiceTest {
         return employee;
     }
 
-
     @Nested
     @DisplayName("findAll() method tests")
     class FindAll {
         @Test
-        @DisplayName("should return all test if exists")
-        void shouldReturn_AllEmployees () {
+        @DisplayName("should return all employees if they exist")
+        void shouldReturn_AllEmployees() {
             List<Employee> expected = List.of(createTestEmployee(1L), createTestEmployee(2L));
             when(employeeRepository.findAll()).thenReturn(expected);
             List<Employee> actual = employeeService.findAll();
@@ -79,8 +79,8 @@ public class EmployeeServiceTest {
         }
 
         @Test
-        @DisplayName("should return no employee exist")
-        void shouldReturn_NoEmployee () {
+        @DisplayName("should return no employee if none exist")
+        void shouldReturn_NoEmployee() {
             List<Employee> expected = List.of();
             when(employeeRepository.findAll()).thenReturn(expected);
             List<Employee> actual = employeeService.findAll();
@@ -94,8 +94,8 @@ public class EmployeeServiceTest {
     @Nested
     class FindById {
         @Test
-        @DisplayName("should return employee ")
-        void shouldReturn_Employee () {
+        @DisplayName("should return employee")
+        void shouldReturn_Employee() {
             Long id = 155L;
             Employee employee = createTestEmployee(id);
 
@@ -107,7 +107,7 @@ public class EmployeeServiceTest {
 
         @Test
         @DisplayName("should throw exception when employee not found")
-        void shouldThrowException_whenEmployeeNotFound () {
+        void shouldThrowException_whenEmployeeNotFound() {
             Long id = 1L;
             when(employeeRepository.findById(id)).thenReturn(Optional.empty());
             var exception = assertThrows(EntityNotFoundException.class, () -> employeeService.findById(id));
@@ -117,13 +117,12 @@ public class EmployeeServiceTest {
         }
     }
 
-
     @Nested
     @DisplayName("create() method tests")
     class Create {
         @Test
         @DisplayName("should create employee when giving valid data")
-        void shouldCreate_Employee () {
+        void shouldCreate_Employee() {
             Employee expected = createTestEmployee(null);
 
             when(validator.validate(expected)).thenReturn(Set.of());
@@ -133,23 +132,20 @@ public class EmployeeServiceTest {
 
             assertTrue(actual, "The returned employee should match the expected employee");
             verify(employeeRepository).create(expected);
-
+            verify(validator).validate(expected);
         }
 
         @Test
         @DisplayName("should throw exception create employee when giving invalid data")
-        void shouldThrow_ValidationError () {
-            var invalidEmployee = new Employee();
+        void shouldThrow_ValidationError() {
+            Employee invalidEmployee = new Employee();
 
-            var mockPath = mock(Path.class);
-            var mockViolation = mock(ConstraintViolation.class);
-
-            when(mockPath.toString()).thenReturn("email");
-            when(mockViolation.getPropertyPath()).thenReturn(mockPath);
+            ConstraintViolation<Employee> mockViolation = mock(ConstraintViolation.class);
+            when(mockViolation.getPropertyPath()).thenReturn(mock(Path.class));
             when(mockViolation.getMessage()).thenReturn("Email cannot be null");
 
             Set<ConstraintViolation<Employee>> violations = Set.of(mockViolation);
-            when(validator.validate(invalidEmployee)).thenReturn(violations);
+            doReturn(violations).when(validator).validate(invalidEmployee);
 
             var exception = assertThrows(InvalidedRequestException.class, () -> employeeService.create(invalidEmployee));
             assertTrue(exception.getMessage().contains("error employee validation"));
@@ -162,7 +158,7 @@ public class EmployeeServiceTest {
     class Update {
         @Test
         @DisplayName("should update employee when given valid data")
-        void shouldUpdate_Employee () {
+        void shouldUpdate_Employee() {
             Long id = 1L;
             Employee existingEmployee = createTestEmployee(id);
             Employee updatedEmployee = createTestEmployee(id);
@@ -180,16 +176,13 @@ public class EmployeeServiceTest {
 
         @Test
         @DisplayName("should throw validation error when invalid data is provided")
-        void shouldThrow_ValidationError () {
+        void shouldThrow_ValidationError() {
             Long id = 1L;
             Employee invalidEmployee = createTestEmployee(id);
             invalidEmployee.setEmail(null);
 
-            var mockPath = mock(Path.class);
-            var mockViolation = mock(ConstraintViolation.class);
-
-            when(mockPath.toString()).thenReturn("email");
-            when(mockViolation.getPropertyPath()).thenReturn(mockPath);
+            ConstraintViolation<Employee> mockViolation = mock(ConstraintViolation.class);
+            when(mockViolation.getPropertyPath()).thenReturn(mock(Path.class));
             when(mockViolation.getMessage()).thenReturn("Email cannot be null");
 
             Set<ConstraintViolation<Employee>> violations = Set.of(mockViolation);
@@ -209,7 +202,7 @@ public class EmployeeServiceTest {
 
         @Test
         @DisplayName("should delete employee when employee exists")
-        void shouldDelete_Employee () {
+        void shouldDelete_Employee() {
             Long id = 1L;
             Employee existingEmployee = createTestEmployee(id);
 
@@ -220,11 +213,12 @@ public class EmployeeServiceTest {
 
             assertTrue(actual, "The employee should be successfully deleted");
             verify(employeeRepository).delete(existingEmployee);
+            verify(employeeRepository).findById(id);
         }
 
         @Test
         @DisplayName("should throw exception when employee to delete is not found")
-        void shouldThrowException_whenEmployeeNotFound () {
+        void shouldThrowException_whenEmployeeNotFound() {
             Long id = 1L;
             when(employeeRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -235,6 +229,21 @@ public class EmployeeServiceTest {
             verify(employeeRepository, never()).delete(any(Employee.class));
             verify(employeeRepository).findById(id);
         }
-    }
 
+        @Test
+        @DisplayName("should return false when delete operation fails")
+        void shouldReturnFalse_whenDeleteFails() {
+            Long id = 1L;
+            Employee existingEmployee = createTestEmployee(id);
+
+            lenient().when(employeeRepository.findById(id)).thenReturn(Optional.of(existingEmployee));
+            when(employeeRepository.delete(existingEmployee)).thenReturn(false);
+
+            boolean actual = employeeService.delete(existingEmployee);
+
+            assertFalse(actual, "The delete operation should fail");
+            verify(employeeRepository).delete(existingEmployee);
+            verify(employeeRepository).findById(id);
+        }
+    }
 }

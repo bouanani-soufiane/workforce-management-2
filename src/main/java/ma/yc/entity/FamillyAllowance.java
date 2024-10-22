@@ -1,6 +1,8 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "famillyAllowances")
@@ -8,7 +10,11 @@ public class FamillyAllowance {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Min(value = 0, message = "Children count must be non-negative")
     private int childrenCount;
+
+    @Positive(message = "Salary must be a positive value")
     private double salary;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "famillyAllowance")

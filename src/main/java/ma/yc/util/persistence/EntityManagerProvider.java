@@ -1,4 +1,4 @@
-package ma.yc.util;
+package ma.yc.util.persistence;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

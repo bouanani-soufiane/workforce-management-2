@@ -36,3 +36,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+.env
+.smarttomcat
+.mvn
+.idea
+.gitignore
+mvnw
+mvnw.cmd

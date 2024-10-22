@@ -1,6 +1,7 @@
 package ma.yc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -10,10 +11,21 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @NotBlank(message = "Name cannot be blank")
     private String name;
+
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email should be valid")
     private String email;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 6, message = "Password should have at least 6 characters")
     private String password;
+
+    @NotBlank(message = "Address cannot be blank")
     private String address;
+
     private boolean role ;
 
     public Long getId () {

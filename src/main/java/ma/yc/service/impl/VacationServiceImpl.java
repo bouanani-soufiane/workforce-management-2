@@ -11,19 +11,19 @@ import ma.yc.exception.InvalidedRequestException;
 import ma.yc.repository.EmployeeRepository;
 import ma.yc.repository.VacationRepository;
 import ma.yc.service.VacationService;
+import ma.yc.util.Dates;
 
 import java.util.List;
 import java.util.Set;
-
-import static ma.yc.util.Dates.getDaysLeft;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class VacationServiceImpl implements VacationService {
 
-    private VacationRepository repository;
-    private EmployeeRepository employeeRepository;
+    private final VacationRepository repository;
+    private final EmployeeRepository employeeRepository;
     private final Validator validator;
-
 
     @Inject
     public VacationServiceImpl ( VacationRepository repository, EmployeeRepository employeeRepository, Validator validator ) {
@@ -34,41 +34,25 @@ public class VacationServiceImpl implements VacationService {
 
     @Override
     public boolean create ( Vacation vacation ) {
-        validate(vacation);
-        Employee employee = vacation.getEmployee();
-        int sold = employee.getSoldVacation();
-
-        long totlaDays = getDaysLeft(vacation.getStartDate(), vacation.getEndDate());
-
-        if (totlaDays > sold) {
-            throw new RuntimeException("not enough days left in vacation");
-        }
-        employeeRepository.decrementVacationSold(employee,totlaDays);
-
-        boolean isOverlapping = this.findAll().stream().anyMatch(( v ) -> v.getStartDate().isEqual(vacation.getStartDate()) && v.getEndDate().isEqual(vacation.getEndDate()) && v.getEmployee().getDepartement().equals(vacation.getEmployee().getDepartement()));
-        if (isOverlapping) {
-            repository.setStatusRejected(vacation);
-        }
-        return repository.create(vacation);
+        return validate(vacation, this::createVacation);
     }
 
     @Override
     public boolean update ( Vacation vacation ) {
-        validate(vacation);
-        return repository.update(vacation);
+        return validate(vacation, repository::update);
     }
 
     @Override
     public boolean delete ( Vacation vacation ) {
-        if (repository.findById(vacation.getId()).isEmpty()) {
-            throw new EntityNotFoundException("vacation", vacation.getId());
-        }
-        return repository.delete(vacation);
+        return repository.findById(vacation.getId())
+                .map(found -> repository.delete(found))
+                .orElseThrow(() -> new EntityNotFoundException("vacation", vacation.getId()));
     }
 
     @Override
     public Vacation findById ( Long id ) {
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("vacation" , id));
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("vacation", id));
     }
 
     @Override
@@ -78,21 +62,47 @@ public class VacationServiceImpl implements VacationService {
 
     @Override
     public boolean setStatusRejected ( Vacation vacation ) {
-        return repository.setStatusRejected(vacation);
+        return repository.update(vacation);
     }
 
     @Override
     public boolean setStatusAccepted ( Vacation vacation ) {
-        return repository.setStatusAccepted(vacation);
-
+        return repository.update(vacation);
     }
 
-    private void validate ( Vacation vacation ) {
-        Set<ConstraintViolation<Vacation>> violations = validator.validate(vacation);
-        if (!violations.isEmpty()) {
-            violations.forEach(c -> System.out.println(c.getPropertyPath().toString() + " -> " + c.getMessage()));
-            throw new InvalidedRequestException("error vacation validation");
+    private <T> boolean validate ( T entity, Function<T, Boolean> operation ) {
+        Set<ConstraintViolation<T>> violations = validator.validate(entity);
+        if (violations.isEmpty()) {
+            return operation.apply(entity);
+        } else {
+            String errorMessage = violations.stream()
+                    .map(v -> v.getPropertyPath() + " -> " + v.getMessage())
+                    .collect(Collectors.joining(", "));
+            throw new InvalidedRequestException("Error in vacation validation: " + errorMessage);
         }
     }
 
+    private boolean createVacation ( Vacation vacation ) {
+        Employee employee = vacation.getEmployee();
+        long totalDays = Dates.getDaysLeft(vacation.getStartDate(), vacation.getEndDate());
+
+        if (totalDays > employee.getSoldVacation()) {
+            throw new RuntimeException("Not enough days left in vacation");
+        }
+
+        employeeRepository.decrementVacationSold(employee, totalDays);
+
+        if (isVacationOverlapping(vacation)) {
+            repository.update(vacation);
+        }
+
+        return repository.create(vacation);
+    }
+
+    private boolean isVacationOverlapping ( Vacation vacation ) {
+        return findAll().stream()
+                .anyMatch(v -> v.getStartDate().isEqual(vacation.getStartDate())
+                        && v.getEndDate().isEqual(vacation.getEndDate())
+                        && v.getEmployee().getDepartement().equals(vacation.getEmployee().getDepartement()));
+    }
 }

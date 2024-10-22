@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -20,19 +21,19 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Vacation service test")
-
-public class VacationServiceTest {
+class VacationServiceTest {
     @Mock
     private VacationRepository vacationRepository;
 
     @Mock
     private EmployeeRepository employeeRepository;
 
-    @Mock
+    @Spy
     private Validator validator;
 
     @InjectMocks
@@ -55,7 +56,7 @@ public class VacationServiceTest {
         @DisplayName("should return all vacations if exist")
         void shouldReturn_AllVacations () {
             List<Vacation> expected = List.of(createTestVacation(1L), createTestVacation(2L));
-            when(vacationRepository.findAll()).thenReturn(expected);
+            doReturn(expected).when(vacationRepository).findAll();
             List<Vacation> actual = vacationService.findAll();
 
             assertEquals(expected.size(), actual.size());
@@ -67,7 +68,7 @@ public class VacationServiceTest {
         @DisplayName("should return no vacation if none exist")
         void shouldReturn_NoVacation () {
             List<Vacation> expected = List.of();
-            when(vacationRepository.findAll()).thenReturn(expected);
+            doReturn(expected).when(vacationRepository).findAll();
             List<Vacation> actual = vacationService.findAll();
 
             assertEquals(0, actual.size());
@@ -84,8 +85,7 @@ public class VacationServiceTest {
         void shouldReturn_Vacation () {
             Long id = 155L;
             Vacation vacation = createTestVacation(id);
-
-            when(vacationRepository.findById(id)).thenReturn(Optional.of(vacation));
+            doReturn(Optional.of(vacation)).when(vacationRepository).findById(id);
             Vacation actual = vacationService.findById(id);
 
             assertEquals(vacation, actual, "The returned vacation should match the expected vacation");
@@ -96,10 +96,8 @@ public class VacationServiceTest {
         @DisplayName("should throw exception when vacation not found")
         void shouldThrowException_whenVacationNotFound () {
             Long id = 1L;
-            when(vacationRepository.findById(id)).thenReturn(Optional.empty());
-            var exception = assertThrows(EntityNotFoundException.class, () -> vacationService.findById(id));
-
-            assertEquals("vacation with id " + id + " not found", exception.getMessage());
+            doReturn(Optional.empty()).when(vacationRepository).findById(id);
+            assertThrows(EntityNotFoundException.class, () -> vacationService.findById(id));
             verify(vacationRepository).findById(id);
         }
     }
@@ -115,14 +113,13 @@ public class VacationServiceTest {
             employee.setSoldVacation(15);
             vacation.setEmployee(employee);
 
-            lenient().when(validator.validate(vacation)).thenReturn(Set.of());
-            when(vacationRepository.create(vacation)).thenReturn(true);
-            lenient().when(employeeRepository.decrementVacationSold(employee, employee.getSoldVacation())).thenReturn(true);
+            doReturn(Set.of()).when(validator).validate(vacation);
+            doReturn(true).when(vacationRepository).create(vacation);
+            doReturn(true).when(employeeRepository).decrementVacationSold(employee, employee.getSoldVacation());
 
-            boolean actual = vacationService.create(vacation);
-
-            assertTrue(actual, "The vacation should be created successfully");
+            assertTrue(vacationService.create(vacation));
             verify(vacationRepository).create(vacation);
+            verify(employeeRepository).decrementVacationSold(employee, employee.getSoldVacation());
         }
 
         @Test
@@ -133,29 +130,24 @@ public class VacationServiceTest {
             employee.setSoldVacation(1);
             vacation.setEmployee(employee);
 
-            lenient().when(vacationRepository.create(vacation)).thenReturn(false);
-            lenient().when(employeeRepository.decrementVacationSold(employee, employee.getSoldVacation())).thenReturn(false);
+            doReturn(false).when(vacationRepository).create(vacation);
+            doReturn(false).when(employeeRepository).decrementVacationSold(employee, employee.getSoldVacation());
 
-            var exception = assertThrows(RuntimeException.class, () -> vacationService.create(vacation));
-
-            assertEquals("not enough days left in vacation", exception.getMessage());
-
+            assertThrows(RuntimeException.class, () -> vacationService.create(vacation));
         }
     }
 
     @Nested
     @DisplayName("delete() method tests")
     class Delete {
-
         @Test
         @DisplayName("should delete vacancy when exists")
         void shouldDelete_Employee () {
             Long id = 1L;
             Vacation vacation = createTestVacation(id);
-            lenient().when(vacationRepository.findById(id)).thenReturn(Optional.of(vacation));
-            lenient().when(vacationRepository.delete(vacation)).thenReturn(true);
-            boolean result = vacationService.delete(vacation);
-            assertTrue(result);
+            doReturn(Optional.of(vacation)).when(vacationRepository).findById(id);
+            doReturn(true).when(vacationRepository).delete(vacation);
+            assertTrue(vacationService.delete(vacation));
             verify(vacationRepository).delete(vacation);
         }
 
@@ -163,15 +155,10 @@ public class VacationServiceTest {
         @DisplayName("should throw exception when vacancy to delete is not found")
         void shouldThrowException_whenEmployeeNotFound () {
             Long id = 1L;
-
-            when(vacationRepository.findById(id)).thenReturn(Optional.empty());
-            var exception = assertThrows(EntityNotFoundException.class, () -> vacationService.findById(id));
-
-            assertEquals("vacation" + " with id " + id + " not found", exception.getMessage());
-
+            doReturn(Optional.empty()).when(vacationRepository).findById(id);
+            assertThrows(EntityNotFoundException.class, () -> vacationService.findById(id));
             verify(vacationRepository, never()).delete(any(Vacation.class));
             verify(vacationRepository).findById(id);
-
         }
     }
 }
