@@ -1,7 +1,6 @@
-package ma.yc.util.genericRepository;
+package ma.yc.util.persistence;
 
 import jakarta.persistence.EntityManager;
-import ma.yc.util.EntityManagerProvider;
 
 import java.util.List;
 import java.util.Optional;

@@ -4,8 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import ma.yc.entity.Employee;
 import ma.yc.repository.EmployeeRepository;
-import ma.yc.util.EntityManagerProvider;
-import ma.yc.util.genericRepository.DefaultRepositoryImpl;
+import ma.yc.util.persistence.EntityManagerProvider;
+import ma.yc.util.persistence.DefaultRepositoryImpl;
 
 @ApplicationScoped
 public class EmployeeRepositoryImpl extends DefaultRepositoryImpl<Employee> implements EmployeeRepository {
@@ -34,3 +34,4 @@ public class EmployeeRepositoryImpl extends DefaultRepositoryImpl<Employee> impl
         return false;
     }
 }
+
